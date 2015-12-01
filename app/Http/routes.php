@@ -14,3 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(array('prefix' => 'admin'), function() {
+
+    Route::get('/', function() {
+        return view('admin.index');
+    });
+
+    Route::get('/cake-requests', function() {
+        return view('admin.cake-requests.index');
+    });
+});
