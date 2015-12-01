@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(array('prefix' => 'admin'), function() {
+Route::group(array('prefix' => 'admin', 'middleware' => 'auth'), function() {
 
     Route::get('/', function() {
         return view('admin.index');
@@ -25,3 +25,8 @@ Route::group(array('prefix' => 'admin'), function() {
         return view('admin.cake-requests.index');
     });
 });
+
+// Authentication routes...
+Route::get('auth/login', 'Auth\AuthController@getLogin');
+Route::post('auth/login', 'Auth\AuthController@postLogin');
+Route::get('auth/logout', 'Auth\AuthController@getLogout');
