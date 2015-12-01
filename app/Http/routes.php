@@ -12,18 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/admin');
 });
 
-Route::group(array('prefix' => 'admin', 'middleware' => 'auth'), function() {
-
-    Route::get('/', function() {
-        return view('admin.index');
-    });
-
-    Route::get('/cake-requests', function() {
-        return view('admin.cake-requests.index');
-    });
+Route::group(array('namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'), function () {
+    Route::get('/', 'HomeController@index');
+    Route::resource('/cake-requests', 'CakeRequestsController');
 });
 
 // Authentication routes...
