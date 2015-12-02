@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\CakeRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -48,7 +49,11 @@ class CakeRequestsController extends Controller
      */
     public function show($id)
     {
-        //
+        $cakeRequest = CakeRequest::find($id);
+        if ($cakeRequest == null) {
+            return redirect('/admin/cake-requests');
+        }
+        return view('admin.cake-requests.show', compact('cakeRequest'));
     }
 
     /**
