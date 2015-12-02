@@ -1,18 +1,53 @@
 @extends('layouts.admin_layout')
 
-@section('content')
+@section('styles')
+    <link href="/assets/admin/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
+    <link href="/assets/admin/css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'>
+@endsection
 
+@section('content')
     <div class="row">
         <div class="col-lg-12">
-            <div class="text-center m-t-lg">
-                <h1>
-                    Welcome in INSPINIA Static SeedProject
-                </h1>
-                <small>
-                    It is an application skeleton for a typical web app. You can use it to quickly bootstrap your webapp projects and dev environment for these projects.
-                </small>
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Pedidos</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="calendar"></div>
+                </div>
             </div>
         </div>
     </div>
+@endsection
 
+@section('scripts')
+    <!-- Full Calendar -->
+    <script src="/assets/admin/js/plugins/fullcalendar/moment.min.js"></script>
+    <script src="/assets/admin/js/plugins/fullcalendar/fullcalendar.min.js"></script>
+    <script src="/assets/admin/js/plugins/fullcalendar/lang-all.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            /* initialize the calendar
+             -----------------------------------------------------------------*/
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+            $('#calendar').fullCalendar({
+                timezone: 'America/Fortaleza',
+                lang: 'pt-br',
+                editable: true,
+                events: '/api/cake-requests'
+            });
+
+        });
+    </script>
 @endsection

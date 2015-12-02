@@ -20,6 +20,10 @@ Route::group(array('namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 
     Route::resource('/cake-requests', 'CakeRequestsController');
 });
 
+Route::group(array('namespace' => 'Api', 'prefix' => 'api'), function () {
+    Route::get('/cake-requests', 'ApiController@getOpenedCakeRequests');
+});
+
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');

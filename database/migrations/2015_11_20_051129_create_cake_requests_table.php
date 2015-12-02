@@ -24,7 +24,7 @@ class CreateCakeRequestsTable extends Migration
 
             $table->decimal('estimated_price', 8, 2);
 
-            $table->timestamp('playment_timestamp')->nullable();
+            $table->timestamp('payment_timestamp')->nullable();
             $table->decimal('payment_value', 8, 2)->nullable();
 
             $table->enum('status', array('opened', 'closed', 'cancelled', 'excluded'));

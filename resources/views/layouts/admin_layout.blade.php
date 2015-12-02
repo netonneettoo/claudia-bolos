@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -11,11 +9,16 @@
     <link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
 
+    @yield('styles')
+
     <link href="/assets/admin/css/animate.css" rel="stylesheet">
     <link href="/assets/admin/css/style.css" rel="stylesheet">
 
-    @yield('styles')
-
+    <style>
+        img {
+            max-width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -67,6 +70,8 @@
 <script src="/assets/admin/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="/assets/admin/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
+@yield('scripts')
+
 <!-- Custom and plugin javascript -->
 <script src="/assets/admin/js/inspinia.js"></script>
 <script src="/assets/admin/js/plugins/pace/pace.min.js"></script>
@@ -77,8 +82,5 @@
     });
 </script>
 
-@yield('scripts')
-
 </body>
-
 </html>
