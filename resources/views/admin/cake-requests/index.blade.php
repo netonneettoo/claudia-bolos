@@ -37,7 +37,13 @@
                 timezone: 'America/Fortaleza',
                 lang: 'pt-br',
                 editable: true,
-                events: '/api/cake-requests'
+                events: '/api/cake-requests',
+                dayClick: function(date) {
+                    var r = confirm("Criar novo pedido para a data " + date.format('DD/MM/YYYY') + " ?");
+                    if (r == true) {
+                        window.location = '/admin/cake-requests/create?day=' + date.format('DD/MM/YYYY');
+                    }
+                }
             });
         });
     </script>

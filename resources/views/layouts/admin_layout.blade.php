@@ -29,6 +29,10 @@
         #cake_image {
             display: none;
         }
+
+        .fc-day {
+            cursor: pointer;
+        }
     </style>
 </head>
 

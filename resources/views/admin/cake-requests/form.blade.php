@@ -78,6 +78,14 @@
                 readURL(this);
             });
 
+            @if ($cakeRequest->id != null)
+                    $('#delivery_timestamp').datepicker('update', '{{$cakeRequest->getDeliveryTimestamp()}}');
+            @else
+                @if ($request->get('day') != null)
+                    $('#delivery_timestamp').datepicker('update', '{{$request->get('day')}}');
+                @endif
+            @endif
+
             function readURL(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -103,11 +111,5 @@
         });
     </script>
 
-    @if($cakeRequest->id != null)
-        <script>
-            $(document).ready(function() {
-                $('#delivery_timestamp').datepicker('update', '{{$cakeRequest->getDeliveryTimestamp()}}');
-            });
-        </script>
-    @endif
+
 @endsection

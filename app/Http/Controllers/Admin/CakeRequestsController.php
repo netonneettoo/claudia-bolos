@@ -26,10 +26,10 @@ class CakeRequestsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $cakeRequest = new CakeRequest();
-        return view('admin.cake-requests.create', compact('cakeRequest'));
+        return view('admin.cake-requests.create', compact('cakeRequest', 'request'));
     }
 
     /**
@@ -40,7 +40,9 @@ class CakeRequestsController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->file('cake_image'));
+        $request->merge(['delivery_timestamp' => date('Y-m-d', strtotime(str_replace('/', '-', $request->get('delivery_timestamp'))))]);
+
+        dd($request->all());
     }
 
     /**
