@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class CakeRequestsController extends Controller
 {
@@ -27,7 +28,8 @@ class CakeRequestsController extends Controller
      */
     public function create()
     {
-        //
+        $cakeRequest = new CakeRequest();
+        return view('admin.cake-requests.create', compact('cakeRequest'));
     }
 
     /**
@@ -38,7 +40,7 @@ class CakeRequestsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->file('cake_image'));
     }
 
     /**
@@ -51,7 +53,7 @@ class CakeRequestsController extends Controller
     {
         $cakeRequest = CakeRequest::find($id);
         if ($cakeRequest == null) {
-            return redirect('/admin/cake-requests');
+            return redirect()->back();
         }
         return view('admin.cake-requests.show', compact('cakeRequest'));
     }
@@ -64,7 +66,11 @@ class CakeRequestsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $cakeRequest = CakeRequest::find($id);
+        if ($cakeRequest == null) {
+            return redirect()->back();
+        }
+        return view('admin.cake-requests.edit', compact('cakeRequest'));
     }
 
     /**
@@ -76,7 +82,25 @@ class CakeRequestsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+
+            DB::beginTransaction();
+
+            $validator = (new CakeRequest())->validate($request->all());
+            if ($validator->fails()) {
+                throw new \Exception('Erro na validação dos campos', 500);
+            }
+
+            //$cakeRequest = (new CakeRequest());
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            //
+        }
+
+        dd($request->file('cake_image')->getClientOriginalExtension());
     }
 
     /**

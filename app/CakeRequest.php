@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class CakeRequest extends Model
 {
@@ -10,6 +11,36 @@ class CakeRequest extends Model
     const CLOSED = 'closed';
     const CANCELLED = 'cancelled';
     const EXCLUDED = 'excluded';
+
+    protected $fillable = [
+        'delivery_timestamp',
+        'cake_image',
+        'client_name',
+        'client_phone',
+        'client_mobile',
+        'estimated_price',
+        'payment_value',
+        'status',
+        'note'
+    ];
+
+    protected $rules = [
+        'delivery_timestamp'    => 'required',
+        //'cake_image'            => '',
+        'client_name'           => 'required',
+        'client_phone'          => 'min:14|max:16',
+        'client_mobile'         => 'min:14|max:16',
+        'estimated_price'       => 'required',
+        //'payment_value'         => '',
+        'status'                => 'required',
+        //'note'                  => ''
+    ];
+
+    public function validate($data) {
+        return Validator::make($data, $this->rules, $this->messages);
+    }
+
+    protected $messages = [];
 
     public static function getColorByStatus($status) {
         switch ($status) {
