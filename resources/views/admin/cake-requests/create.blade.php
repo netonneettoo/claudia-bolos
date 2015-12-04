@@ -1,8 +1,4 @@
-@extends('layouts.admin_layout')
-
-@section('styles')
-    <link href="/assets/admin/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
-@endsection
+@extends('layouts.admin_layout')s
 
 @section('content')
     <div class="row">

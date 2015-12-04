@@ -12,7 +12,7 @@ class ApiController extends Controller
     public function getOpenedCakeRequests() {
 
         $cakeRequests = CakeRequest::where('status', CakeRequest::OPENED)
-            ->whereBetween('delivery_timestamp', array(Carbon::now()->subWeek(1)->toDateString(), Carbon::now()->addWeek(2)->toDateString()))
+            ->whereBetween('delivery_timestamp', array(Carbon::now()->toDateString(), Carbon::now()->addYear()->toDateString()))
             ->get();
 
         $data = array();

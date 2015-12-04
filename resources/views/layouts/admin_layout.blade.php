@@ -18,18 +18,15 @@
         img {
             max-width: 100%;
         }
-
-        #cake_request_preview {
+        #cake_image_preview {
             display: block;
             margin: 0 auto;
             width: 100%;
             height: auto;
         }
-
         #cake_image {
             display: none;
         }
-
         .fc-day {
             cursor: pointer;
         }

@@ -40,9 +40,36 @@ class CakeRequestsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->merge(['delivery_timestamp' => date('Y-m-d', strtotime(str_replace('/', '-', $request->get('delivery_timestamp'))))]);
+        try {
 
-        dd($request->all());
+            DB::beginTransaction();
+
+            $request->merge(['delivery_timestamp' => date('Y-m-d', strtotime(str_replace('/', '-', $request->get('delivery_timestamp'))))]);
+
+            $validator = (new CakeRequest())->validate($request->all());
+
+            if ($validator->fails()) {
+                throw new \Exception('Erro na validação dos dados', 500);
+            }
+
+            $cakeRequest = (new CakeRequest())->fill($request->all());
+
+            $urlCakeImage = CakeRequest::uploadCakeImage($request->file('cake_image'));
+            if ($urlCakeImage != null) {
+                $cakeRequest->cake_image = $urlCakeImage;
+            }
+
+            if (! $cakeRequest->save()) {
+                throw new \Exception('Não foi possível salvar o pedido', 500);
+            }
+
+            DB::commit();
+            return redirect('/admin/cake-requests/' . $cakeRequest->id);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back();
+        }
     }
 
     /**
@@ -88,21 +115,33 @@ class CakeRequestsController extends Controller
 
             DB::beginTransaction();
 
+            $request->merge(array('delivery_timestamp' => date('Y-m-d', strtotime(str_replace('/', '-', $request->get('delivery_timestamp'))))));
+
             $validator = (new CakeRequest())->validate($request->all());
+
             if ($validator->fails()) {
-                throw new \Exception('Erro na validação dos campos', 500);
+                throw new \Exception('Erro na validação dos dados', 500);
             }
 
-            //$cakeRequest = (new CakeRequest());
+            $cakeRequest = CakeRequest::put($request->all(), $id);
+
+
+            $urlCakeImage = CakeRequest::uploadCakeImage($request->file('cake_image'));
+            if ($urlCakeImage != null) {
+                $cakeRequest->cake_image = $urlCakeImage;
+            }
+
+            if (! $cakeRequest->save()) {
+                throw new \Exception('Não foi possível salvar o pedido', 500);
+            }
 
             DB::commit();
+            return redirect('/admin/cake-requests/' . $id);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            //
+            return redirect()->back();
         }
-
-        dd($request->file('cake_image')->getClientOriginalExtension());
     }
 
     /**

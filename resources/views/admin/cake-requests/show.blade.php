@@ -18,7 +18,7 @@
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-lg-4">
-                            <img src="http://lorempixel.com/500/450/" alt="img" class="thumbnail" />
+                            <img src="{{$cakeRequest->cake_image}}" alt="{{$cakeRequest->cake_image}}" class="img-thumbnail" style="width:100%;height:auto;margin-bottom:20px;" />
                         </div>
                         <div class="col-lg-8">
                             <div class="col-lg-6">

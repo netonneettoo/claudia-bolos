@@ -7,9 +7,6 @@
                 <div class="ibox-title">
                     <h5>#{{$cakeRequest->id}} - {{$cakeRequest->client_name}}</h5>
                     <div class="ibox-tools">
-                        <a class="link" href="/admin/cake-requests/{{$cakeRequest->id}}/edit">
-                            <i class="fa fa-pencil"></i>
-                        </a>
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>

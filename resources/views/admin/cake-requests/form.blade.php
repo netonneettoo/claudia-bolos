@@ -3,7 +3,7 @@
 @endsection
 
 <div class="col-lg-4">
-    <img id="cake_request_preview" src="/assets/admin/img/no-image.jpg" alt="cake-request-image" class="img-thumbnail" />
+    <img id="cake_image_preview" src="/assets/admin/img/no-image.jpg" alt="cake-request-image" class="img-thumbnail" />
     <input id="cake_image" name="cake_image" accept="image/*" type="file"/>
     <a href="#" id="reset_input_file" class="btn btn-sm btn-danger" style="margin-top:20px;">Limpar</a>
     <a href="#" id="select_input_file" class="btn btn-sm btn-primary" style="float:right;margin-top:20px;">Selecionar</a>
@@ -67,6 +67,9 @@
 
     <script>
         $(document).ready(function() {
+
+            var cake_image_default = '/assets/admin/img/no-image.jpg';
+
             $('#delivery_timestamp').datepicker({
                 format: 'dd/mm/yyyy',
                 language: 'pt-BR',
@@ -79,7 +82,9 @@
             });
 
             @if ($cakeRequest->id != null)
-                    $('#delivery_timestamp').datepicker('update', '{{$cakeRequest->getDeliveryTimestamp()}}');
+                $('#delivery_timestamp').datepicker('update', '{{$cakeRequest->getDeliveryTimestamp()}}');
+                $('#cake_image_preview').attr('src', '{{$cakeRequest->cake_image}}');
+                $('#cake_image').val('');
             @else
                 @if ($request->get('day') != null)
                     $('#delivery_timestamp').datepicker('update', '{{$request->get('day')}}');
@@ -90,11 +95,11 @@
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
-                        $('#cake_request_preview').attr('src', e.target.result);
+                        $('#cake_image_preview').attr('src', e.target.result);
                     };
                     reader.readAsDataURL(input.files[0]);
                 } else {
-                    $('#cake_request_preview').attr('src', '/assets/admin/img/no-image.jpg');
+                    $('#cake_image_preview').attr('src', cake_image_default);
                 }
             }
 
@@ -106,7 +111,7 @@
             $('#reset_input_file').click(function(evt) {
                 evt.preventDefault();
                 $('#cake_image').val('');
-                $('#cake_request_preview').attr('src', '/assets/admin/img/no-image.jpg');
+                $('#cake_image_preview').attr('src', cake_image_default);
             });
         });
     </script>
