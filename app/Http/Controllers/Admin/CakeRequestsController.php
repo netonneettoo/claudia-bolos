@@ -116,6 +116,14 @@ class CakeRequestsController extends Controller
             DB::beginTransaction();
 
             $request->merge(array('delivery_timestamp' => date('Y-m-d', strtotime(str_replace('/', '-', $request->get('delivery_timestamp'))))));
+            if ($request->get('estimated_price') != null) {
+                $request->merge(array('estimated_price' => doubleval(str_replace(',', '.', str_replace('.', '', $request->get('estimated_price'))))));
+            }
+            if ($request->get('payment_value') != null) {
+                $request->merge(array('payment_value' => doubleval(str_replace(',', '.', str_replace('.', '', $request->get('payment_value'))))));
+            }
+
+            dd($request->all());
 
             $validator = (new CakeRequest())->validate($request->all());
 
@@ -123,12 +131,13 @@ class CakeRequestsController extends Controller
                 throw new \Exception('Erro na validação dos dados', 500);
             }
 
-            $cakeRequest = CakeRequest::put($request->all(), $id);
+            $cakeRequest = (new CakeRequest)->put($request->all(), $id);
 
-
-            $urlCakeImage = CakeRequest::uploadCakeImage($request->file('cake_image'));
-            if ($urlCakeImage != null) {
-                $cakeRequest->cake_image = $urlCakeImage;
+            if (boolval($request->has('cake_image'))) {
+                $urlCakeImage = CakeRequest::uploadCakeImage($request->file('cake_image'));
+                if ($urlCakeImage != null) {
+                    $cakeRequest->cake_image = $urlCakeImage;
+                }
             }
 
             if (! $cakeRequest->save()) {
@@ -140,6 +149,7 @@ class CakeRequestsController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return redirect()->back();
         }
     }

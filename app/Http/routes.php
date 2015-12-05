@@ -22,6 +22,7 @@ Route::group(array('namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 
 
 Route::group(array('namespace' => 'Api', 'prefix' => 'api'), function () {
     Route::get('/cake-requests', 'ApiController@getOpenedCakeRequests');
+    Route::post('/delete-cake-image', 'ApiController@deleteCakeImage');
 });
 
 // Authentication routes...

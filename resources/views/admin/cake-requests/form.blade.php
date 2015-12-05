@@ -2,11 +2,12 @@
     <link href="/assets/admin/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 @endsection
 
-<div class="col-lg-4">
+<div class="col-lg-4" style="position:relative;">
+    <a id="remove_cake_image" class="btn btn-xs btn-danger" style="position:absolute;right:20px;top:6px;display:none;"><span class="glyphicon glyphicon-remove"></span></a>
     <img id="cake_image_preview" src="/assets/admin/img/no-image.jpg" alt="cake-request-image" class="img-thumbnail" />
     <input id="cake_image" name="cake_image" accept="image/*" type="file"/>
-    <a href="#" id="reset_input_file" class="btn btn-sm btn-danger" style="margin-top:20px;">Limpar</a>
-    <a href="#" id="select_input_file" class="btn btn-sm btn-primary" style="float:right;margin-top:20px;">Selecionar</a>
+    <a href="" id="reset_input_file" class="btn btn-sm btn-danger" style="margin-top:20px;">Limpar</a>
+    <a href="" id="select_input_file" class="btn btn-sm btn-primary" style="float:right;margin-top:20px;">Selecionar</a>
     <div style="clear:both;"><br/></div>
 </div>
 <div class="col-lg-8">
@@ -64,57 +65,93 @@
     <!-- Data picker -->
     <script src="/assets/admin/js/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/assets/admin/js/plugins/datapicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+    <script src="/assets/admin/js/plugins/jquery-mask/jquery.mask.min.js"></script>
 
     <script>
         $(document).ready(function() {
 
-            var cake_image_default = '/assets/admin/img/no-image.jpg';
+            var deliveryTimestamp = $('#delivery_timestamp');
+            var cakeImageInput = $('#cake_image');
+            var cakeImagePreview = $('#cake_image_preview');
+            var removeCakeImage = $('#remove_cake_image');
+            var cakeImageDefault = '/assets/admin/img/no-image.jpg';
 
-            $('#delivery_timestamp').datepicker({
+            deliveryTimestamp.datepicker({
                 format: 'dd/mm/yyyy',
                 language: 'pt-BR',
                 autoclose: true,
                 todayHighlight: true
             });
 
-            $('#cake_image').change(function() {
-                readURL(this);
-            });
+            $('#estimated_price').mask('00.000.000,00', {reverse: true, selectOnFocus: true});
+            $('#payment_value').mask('00.000.000,00', {reverse: true, selectOnFocus: true});
+            var SPMaskBehavior = function (val) {
+                return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+            },
+            spOptions = {
+                onKeyPress: function(val, e, field, options) {
+                    field.mask(SPMaskBehavior.apply({}, arguments), options);
+                }
+            };
+            $('#client_phone').mask(SPMaskBehavior, spOptions);
+            $('#client_mobile').mask(SPMaskBehavior, spOptions);
 
-            @if ($cakeRequest->id != null)
-                $('#delivery_timestamp').datepicker('update', '{{$cakeRequest->getDeliveryTimestamp()}}');
-                $('#cake_image_preview').attr('src', '{{$cakeRequest->cake_image}}');
-                $('#cake_image').val('');
+            @if ($cakeRequest->id)
+                deliveryTimestamp.datepicker('update', '{{$cakeRequest->getDeliveryTimestamp()}}');
+                @if(strlen($cakeRequest->cake_image) > 32)
+                    cakeImagePreview.attr('src', '{{$cakeRequest->cake_image}}');
+                    removeCakeImage.show('slow');
+                @endif
             @else
                 @if ($request->get('day') != null)
-                    $('#delivery_timestamp').datepicker('update', '{{$request->get('day')}}');
+                    deliveryTimestamp.datepicker('update', '{{$request->get('day')}}');
                 @endif
             @endif
 
-            function readURL(input) {
+            cakeImageInput.change(function() {
+                readInputFile(this);
+            });
+
+            function readInputFile(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
-                        $('#cake_image_preview').attr('src', e.target.result);
+                        cakeImagePreview.attr('src', e.target.result);
                     };
                     reader.readAsDataURL(input.files[0]);
                 } else {
-                    $('#cake_image_preview').attr('src', cake_image_default);
+                    cakeImagePreview.attr('src', cakeImageDefault);
                 }
+                removeCakeImage.hide('fast');
             }
 
             $('#select_input_file').click(function(evt) {
                 evt.preventDefault();
-                $('#cake_image').click();
+                cakeImageInput.click();
             });
 
             $('#reset_input_file').click(function(evt) {
                 evt.preventDefault();
-                $('#cake_image').val('');
-                $('#cake_image_preview').attr('src', cake_image_default);
+                removeCakeImage.hide('fast');
+                cakeImageInput.val('');
+                cakeImagePreview.attr('src', cakeImageDefault);
             });
-        });
-    </script>
 
+            $('#remove_cake_image').click(function(evt) {
+                evt.preventDefault();
+                removeCakeImageAjax('{{$cakeRequest->id}}');
+            });
+
+            var removeCakeImageAjax = function(id) {
+                $.post('/api/delete-cake-image', { '_token': '{{csrf_token()}}', 'id': id }, function(data) {
+                    removeCakeImage.hide('fast');
+                    cakeImagePreview.attr('src', cakeImageDefault);
+                }, 'json').error(function(data) {
+                    console.warn(data);
+                });
+            };
+        });
+
+    </script>
 
 @endsection

@@ -3,9 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
-use Stringy\Stringy;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CakeRequest extends Model
@@ -46,9 +44,9 @@ class CakeRequest extends Model
 
     public function validate($data) {
         if (strtolower($_SERVER['REQUEST_METHOD']) == 'put' || strtolower($_SERVER['REQUEST_METHOD']) == 'patch') {
-            return Validator::make($data, $this->rulesPut, $this->messages);
+            return Validator::make($data, $this->rulesPut, $this->messagesPut);
         } else {
-            return Validator::make($data, $this->rules, $this->messagesPut);
+            return Validator::make($data, $this->rules, $this->messages);
         }
     }
 
@@ -56,9 +54,6 @@ class CakeRequest extends Model
         $obj = CakeRequest::find($id);
         if (@isset($data['delivery_timestamp']) && $data['delivery_timestamp'] != null)
             $obj->delivery_timestamp = $data['delivery_timestamp'];
-
-        if (@isset($data['cake_image']) && $data['cake_image'] != null)
-            $obj->cake_image = $data['cake_image'];
 
         if (@isset($data['client_name']) && $data['client_name'] != null)
             $obj->client_name = $data['client_name'];
@@ -113,7 +108,7 @@ class CakeRequest extends Model
                 return '#ffffff';
                 break;
             case self::EXCLUDED:
-                return 'black';
+                return '#000000';
                 break;
         }
     }

@@ -30,4 +30,18 @@ class ApiController extends Controller
 
         return $data;
     }
+
+    public function deleteCakeImage(Request $request) {
+        try {
+            $cakeRequest = CakeRequest::find(intval($request->get('id')));
+            $cakeRequest->cake_image = null;
+            if ($cakeRequest->save()) {
+                return response()->json(array('code'=>200, 'message'=>'success'), 200);
+            } else {
+                throw new \Exception('Não foi possível excluir esta imagem', 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(array('code'=>$e->getCode(), 'message'=>$e->getMessage()), 500);
+        }
+    }
 }
